@@ -1,16 +1,20 @@
+## Update Journal
+修改 *funcRegister.js* 的 註冊前查詢
+>依照帳號、身分證字號、email、電話 SELECT<br/>若有重複，個別回應並在 *RegisterPage.js* 中寫入不同的錯誤訊息
+
 ## Todo
 
 - [ ] session
 
 * Ordinary User
-- [ ] merchandise detail
-- [ ] board for product review(insert)(select)
-- [ ] login (select)
+- [x] login (select)
 - [ ] register ( select(mAccount)
                 + select(email)
                 + select(phone) => null)(insert)
-- [ ] Cart(insert)(select)(delete)
+- [ ] merchandise detail
 - [ ] Order(insert)
+- [ ] Cart(insert)(select)(delete)
+- [ ] board for product review(insert)(select)
 
 * Admin User
 - [ ] check order(select)
@@ -24,4 +28,3 @@
 * nodemon
 * cors
 * mysql
-* mysql2
