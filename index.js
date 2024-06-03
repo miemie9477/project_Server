@@ -14,11 +14,14 @@ app.use(express.urlencoded({extended: true}));
 
 var loginRoute = require("./route/funcLogin");
 var registerRoute = require("./route/funcRegister");
-var GPTRegister = require("./route/GPTRegister");
+var modifyMemberSide = require("./route/funcModify_member");
+var modifyAdminSide = require("./route/funcModify_admin");
+
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
-// app.use("/register", GPTRegister);
-    
+app.use("/modifyMemberSide", modifyMemberSide);
+app.use("/modifyAdminSide", modifyAdminSide);
+
 
 const port = 3001;
 

@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../model/localhost_connection');
-const mysql = require('mysql2/promise');
 
 
 function generateMId() {
@@ -13,14 +12,14 @@ function generateMId() {
     return userId;
 }
 
-async function getGenerateMId(id){
+function getGenerateMId(id){
     
     console.log("userId:" + id);
     // Check if the generated ID is unique
     const query = 'SELECT * FROM 00member WHERE mId = ?';
 
     try{
-        await db.connection.query(query, [id],
+        db.connection.query(query, [id],
             (error, data) =>{
                 if(error){
                     console.log(error);

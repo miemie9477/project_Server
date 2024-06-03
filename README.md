@@ -8,12 +8,13 @@
 
 * Ordinary User
 - [x] login (select)
-- [ ] register ( select(mAccount)
+- [x] register ( select(mAccount)
                 + select(email)
                 + select(phone) => null)(insert)
 - [ ] merchandise detail
-- [ ] Order(insert)
 - [ ] Cart(insert)(select)(delete)
+- [ ] Order(insert)
+- [ ] modify user data(update)
 - [ ] board for product review(insert)(select)
 
 * Admin User
