@@ -8,46 +8,67 @@ function generateMId() {
     const letter = letters[Math.floor(Math.random() * letters.length)];
     const numbers = String(Math.floor(Math.random() * 10000000)).padStart(7, '0');
     const userId = letter + numbers;
-    console.log("get:"+ userId);
     return userId;
 }
 
-function getGenerateMId(id){
-    
-    console.log("userId:" + id);
+async function getGenerateMId(){
+    const id = generateMId();
+    console.log("get userId:" + id);
     // Check if the generated ID is unique
     const query = 'SELECT * FROM 00member WHERE mId = ?';
+    try {
+        const data = await new Promise((resolve, reject) => {
+            db.connection.query(query, [id], (error, results) => {
+                if (error) {
+                    console.log("wrong:", error);
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
 
-    try{
-        db.connection.query(query, [id],
-            (error, data) =>{
-                if(error){
-                    console.log(error);
-                    throw error;
-                }
-                else if(data.length === 0){
-                    console.log("confirm id:" + id);
-                    return true;
-                }
-                else{
-                    console.log("failed id:" +id)
-                    return false;
-                }
-            }
-        )
-    }
-    catch(error){
+        if (data.length === 0) {
+            console.log("confirm id:" + id);
+            return id;
+        } else {
+            console.log("failed id:" + id);
+            return getGenerateMId();  // 递归调用以生成新的 id
+        }
+    } catch (error) {
         console.error('Database query failed:', error);
         throw error;
     }
+    // try{
+    //     db.connection.query(query, [id],
+    //         (error, id, data) =>{
+    //             if(error){
+    //                 console.log("wrong:", error);
+    //                 throw error;
+    //             }
+    //             else if(data.length === 0){
+    //                 console.log("confirm id:"+ id);
+    //                 return id;
+    //             }
+    //             else{
+    //                 console.log("failed id:"+ id)
+    //                 generateMId();
+    //             }
+    //         }
+    //     )
+    // }
+    // catch(error){
+    //     console.error('Database query failed:', error);
+    //     throw error;
+    // }
     
 }
 
 
-router.post("/account" , async(req, res)=>{
+router.post("/account" , (req, res)=>{
     console.log("account fetch:" + req.body.mAccount)
     sql = "SELECT mAccount FROM 00member WHERE mAccount=?"
-    await db.connection.query(sql, [req.body.mAccount],
+     db.connection.query(sql, [req.body.mAccount],
         (error, data) =>{
             if(error){
                 console.log(error);
@@ -58,14 +79,14 @@ router.post("/account" , async(req, res)=>{
             }
             else{
                 console.log("ok");
-                return;
+                return res.json({result:"ok"});
             }
         }
     )
 })
 
-router.post("/pId", async (req, res) =>{
-    await console.log("pId fetch:" + req.body.pId)
+router.post("/pId",  (req, res) =>{
+     console.log("pId fetch:" + req.body.pId)
     sql = "SELECT pId FROM 00member WHERE pId=?"
      db.connection.query(sql, [req.body.pId],
         (error, data) =>{
@@ -78,16 +99,16 @@ router.post("/pId", async (req, res) =>{
             }
             else{
                 console.log("ok");
-                return;
+                return res.json({result:"ok"});
             }
         }
     )
 })
 
-router.post("/email", async (req, res) =>{
+router.post("/email",  (req, res) =>{
     console.log("email fetch:" + req.body.email)
     sql = "SELECT email FROM 00member WHERE email=?"
-    await db.connection.query(sql, [req.body.email],
+     db.connection.query(sql, [req.body.email],
         (error, data) =>{
             if(error){
                 console.log(error);
@@ -98,17 +119,17 @@ router.post("/email", async (req, res) =>{
             }
             else{
                 console.log("ok");
-                return;
+                return res.json({result:"ok"});
             }
         }
     )
 
 })
 
-router.post("/phone", async (req, res) =>{
+router.post("/phone",  (req, res) =>{
     console.log("phone fetch:" + req.body.phone)
     sql = "SELECT phone FROM 00member WHERE phone=?"
-    await db.connection.query(sql, [req.body.phone],
+     db.connection.query(sql, [req.body.phone],
         (error, data) =>{
             if(error){
                 console.log(error);
@@ -119,13 +140,13 @@ router.post("/phone", async (req, res) =>{
             }
             else{
                 console.log("ok");
-                return;
+                return res.json({result:"ok"});
             }
         }
     )
 })
 
-router.post("/check",(req, res)=>{
+router.post("/check", async (req, res)=>{
     console.log("fetch /check")
     const info ={
         mAccount:  req.body.mAccount,
@@ -142,8 +163,8 @@ router.post("/check",(req, res)=>{
     
     sql = "INSERT INTO `00member`(`mId`, `mAccount`, `mPwd`, `mName`, `pId`, `email`, `gender`, `address`, `phone`, `birthday`) VALUES (?,?,?,?,?,?,?,?,?,?)";
     
-    const userId = generateMId();
-
+    const userId = await getGenerateMId();
+    console.log("Here get:", userId)
     db.connection.query(
         sql,
         [userId, info.mAccount, info.mPwd, info.mName, info.pId, info.email, info.gender, info.address, info.phone, info.birthday],

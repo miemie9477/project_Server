@@ -11,7 +11,7 @@ var db = require('../model/localhost_connection');
 //     return true;
 // }
 
-router.get("/view", (req, res) =>{
+router.get("/viewMember", (req, res) =>{
     const sql = "SELECT * FROM `00member`"
     db.connection.query(sql, 
         (error, data) =>{
@@ -26,6 +26,25 @@ router.get("/view", (req, res) =>{
                 }
                 else{
                     res.send({result: "Found no data"})
+                }
+            }
+        }
+    )
+})
+
+router.get("/viewMerchandise", (req, res) =>{
+    const sql = "SELECT * FROM `00product`"
+    db.connection.query(sql,
+        (error, data) =>{
+            if(error){
+                console.log("error,", error)
+            }
+            else{
+                if(data.length > 0)
+                    res.send(data);
+                else{
+                    console.log("something wrong");
+                    res.status(500).send({result: "error"});
                 }
             }
         }

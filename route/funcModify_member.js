@@ -3,14 +3,14 @@ var router = express.Router();
 var db = require('../model/localhost_connection');
 
 router.get("/getData/:userAccount", (req, res) =>{
-    const mAccount = req.params.userAccount;
+    const mId = req.params.userAccount;
 
-    console.log("fetch:" + mAccount);
+    console.log("fetch:" + mId);
 
     try{
         db.connection.query(
-            "SELECT * FROM `00member` WHERE `mAccount`=?;",
-            [mAccount],
+            "SELECT * FROM `00member` WHERE `mId`=?;",
+            [mId],
             (error, data) => {
                 if(error){
                     console.log(error);
@@ -25,7 +25,7 @@ router.get("/getData/:userAccount", (req, res) =>{
                         //     return res.redirect('/welcome')
                             
                         // };
-                        res.send(data);
+                        res.json(data);
                         return;
                     }
                     else{
@@ -40,6 +40,11 @@ router.get("/getData/:userAccount", (req, res) =>{
         console.log(error)
         throw error;
     }
+})
+
+router.post("/modifySubmit/:userAccount", (req, res)=>{
+    const sql = "UPDATE `00member` SET `mId`=?,`mAccount`=?,`mPwd`=?,`mName`=?,`pId`=?,`email`=?,`gender`=?,`address`=?,`phone`=?',`birthday`=? WHERE `mAccount`=?"
+    const mAccount = req.params.userAccount;
 })
 
 module.exports = router
