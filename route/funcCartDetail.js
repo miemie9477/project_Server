@@ -4,7 +4,7 @@ var db = require('../model/localhost_connection');
 
 router.get("/getItem/:userAccount", (req, res) =>{
     const mId = req.params.userAccount
-    const sql = "SELECT cd.* FROM 00cart c JOIN 00cartDetail cd ON c.tId = cd.tId WHERE c.mId =?;"
+    const sql = "SELECT cart.tId, cartdetail.*, product.* FROM 00cart cart JOIN 00cartdetail cartdetail ON cart.tId = cartdetail.tId JOIN 00product product ON cartdetail.pNo = product.pNo WHERE cart.mId=?;"
     //用 會員 選購物車的 交易編號
     //用 交易編號 選 購物車明細
     db.connection.query(sql, [mId],
