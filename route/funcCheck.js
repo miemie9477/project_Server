@@ -14,7 +14,7 @@ async function getGenerateRId(){
     const id = generateRId();
     console.log("get userId:" + id);
     // Check if the generated ID is unique
-    const query = 'SELECT * FROM 00member WHERE mId = ?';
+    const query = 'SELECT * FROM 00transaction WHERE mId = ?';
     try {
         const data = await new Promise((resolve, reject) => {
             db.connection.query(query, [id], (error, results) => {
@@ -64,7 +64,7 @@ async function getGenerateRId(){
 }
 
 router.post("/inputTrans", (req, res) =>{
-    const rId = req.body.tId; 
+    const rId = getGenerateRId();
     const tMethod = "cart";
     const tTime = req.body.tTime;
     const mId = req.body.mId;
@@ -80,8 +80,13 @@ router.post("/inputTrans", (req, res) =>{
     const tState = "未出貨"
     const payState = "已付款"
 
+    /* 1.匯入資料到 00transaction(創建rId)
+       2.用rId匯入交易明細 00record
+       3.刪除 00cartdetail裡已結帳的商品
+    */
+
     const sql = "INSERT INTO `00transaction`(`tId`, `tMethod`, `tTime`, `mId`, `tPay`, `bankId`, `bankName`, `cardId`, `dueDate`, `tDelivery`, `tAddress`, `recipient`, `reciPhone`, `tState`, `payState`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-    db.connection.query(sql, [tId, tMethod, tTime, mId, tPay, bankId, bankName, cardId, dueDate, tDelivery, tAddress, recipient, reciPhone, tState, payState],
+    db.connection.query(sql, [rId, tMethod, tTime, mId, tPay, bankId, bankName, cardId, dueDate, tDelivery, tAddress, recipient, reciPhone, tState, payState],
         (error, data) =>{
             if(error){
                 console.log("error:", error);
@@ -94,18 +99,15 @@ router.post("/inputTrans", (req, res) =>{
     )
 })
 
-router.post("/cartDiscard", (req, res) =>{
-    
-})
 
 router.post("/inputRecord", async (req, res) =>{
-    const rId = getGenerateRId;
+    const rId = getGenerateRId();
     const pNo = req.body.pNo;
     const amount = req.body.amount;
     const rTotal = req.body.rTotal;
     const sql = "INSERT INTO `00record` (`tId`, `pNo`, `amount`, `rTotal`) VALUES(?,?,?,?)"
     
-    db.connection.query(sql, [tId, pNo, amount, rTotal],
+    db.connection.query(sql, [rId, pNo, amount, rTotal],
         (error, data) =>{
             if(error){
                 console.log(error);
@@ -113,7 +115,26 @@ router.post("/inputRecord", async (req, res) =>{
             }
             else{
                 console.log(data);
+                res.send(data);
                 //Call API discard item in cart
+            }
+        }
+    )
+})
+
+router.post("/cartDiscard", (req, res) =>{
+    const tId = req.body.tId;
+    const pNo = req.body.pNo;
+    const sql = "DELETE FROM `00cartdetail` WHERE tId=? AND pNo=?"
+
+    db.connection.query(sql, [tId, pNo],
+        (error, data) =>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
             }
         }
     )

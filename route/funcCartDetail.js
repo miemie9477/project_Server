@@ -25,6 +25,38 @@ router.get("/getItem/:userAccount", (req, res) =>{
     )
 })
 
+router.post("/modifyAmount", (req, res) =>{
+    const tId = req.body.tId;
+    const pName = req.body.pName;
+    const amount = req.body.amount;
+    var salePrice;
+    var sql = "SELECT unitPrice FROM 00product WHERE pName=?"
+    db.connection.query(sql, [pName],
+        (error, data) =>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                salePrice = parseInt(data.unitPrice, 10) * amount;
+            }
+        }
+    )
+
+    sql = "UPDATE `00cartdetail` SET `amount`='?',`salePrice`='?' WHERE tId=? AND pNo=?"
+    db.connection.query(sql, [amount, salePrice, tId, pNo],
+        (error, data) =>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                res.send(data);
+            }
+        }
+    )
+})
+
 function generateTId() {
     const letters = 'abcdefghijklmnopqrstuvwxyz';
     const letter = letters[Math.floor(Math.random() * letters.length)];
@@ -140,4 +172,7 @@ router.post("/add", (req, res) =>{
     )
 })
 
+
+
+router.post("")
 module.exports = router;

@@ -1,15 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../model/localhost_connection');
-
-// checkNull(data) {
-//     for (var key in data) {
-//         // 不為空
-//         return false;
-//     }
-//     // 為空值
-//     return true;
-// }
+const { route } = require('./funcCartDetail');
 
 router.get("/viewMember", (req, res) =>{
     const sql = "SELECT * FROM `00member`"
@@ -32,6 +24,10 @@ router.get("/viewMember", (req, res) =>{
     )
 })
 
+router.post("/modifyMember", (req, res) =>{
+    
+})
+
 router.get("/viewMerchandise", (req, res) =>{
     const sql = "SELECT * FROM `00product`"
     db.connection.query(sql,
@@ -51,4 +47,7 @@ router.get("/viewMerchandise", (req, res) =>{
     )
 })
 
+router.get("/viewTransaction", (req, res) =>{
+
+})
 module.exports = router;

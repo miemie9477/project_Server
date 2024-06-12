@@ -29,6 +29,7 @@ router.get("/search/:keyword", (req, res) =>{
     const sql = "SELECT * FROM `00product` WHERE `pName` LIKE ? OR `brand` LIKE ?;"
     const keyword = req.params.keyword;
     const params = [`%${keyword}%`];
+    console.log("keyword:"+ keyword);
     db.connection.query(sql, [params, params],
         (error, data) =>{
             if(error){

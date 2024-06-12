@@ -1,6 +1,3 @@
-## Update Journal
-修改 *funcRegister.js* 的 註冊前查詢
->依照帳號、身分證字號、email、電話 SELECT<br/>若有重複，個別回應並在 *RegisterPage.js* 中寫入不同的錯誤訊息
 
 先把商品詳細頁面寫完
 * 先找購物車是否存在<br/>
@@ -13,6 +10,8 @@ cartbody 寫到一半
 * 要先找mId => 找購物車+明細
 * 匯出數量&總價
 * 用商品編號找品牌(匯入圖片)
+* 購物車數量變動要call api
+
 ## Todo
 
 - [ ] session
