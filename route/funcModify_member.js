@@ -43,7 +43,7 @@ router.get("/getData/:userAccount", (req, res) =>{
     }
 })
 
-router.post("/modifySubmit", (req, res)=>{
+router.post("/modifyData", (req, res)=>{
     const sql = "UPDATE `00member` SET `mName`=?,`pId`=?,`email`=?,`gender`=?,`address`=?,`phone`=? WHERE `mId`=?"
     const mId = req.body.mId;
     const mName = req.body.mName;
@@ -115,6 +115,26 @@ router.post("/viewRecord", (req, res) =>{
             else{
                 console.log(data);
                 res.send({data});
+            }
+        }
+    )
+})
+
+router.post("/rating", (req, res) =>{
+    const mId = req.body.userAccount;
+    const pNo = req.body.pNo;
+    const date = req.body.date;
+    const info = req.body.info;
+    const sql = "INSERT INTO `00board`(`UUID`, `mId`, `pNo`, `date`, `content`) VALUES ('',?,?,?,?)"
+    db.connection.query(sql, [mId, pNo, date, info],
+        (error, data) =>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success", data});
             }
         }
     )

@@ -102,12 +102,12 @@ router.post("/inputTrans", async (req, res) =>{
 
 
 router.post("/inputRecord", async (req, res) =>{
-    const rId = getGenerateRId();
+    const rId = req.body.rId;
     const pNo = req.body.pNo;
     const amount = req.body.amount;
-    const rTotal = req.body.rTotal;
-    const sql = "INSERT INTO `00record` (`tId`, `pNo`, `amount`, `rTotal`) VALUES(?,?,?,?)"
-    
+    const rTotal = parseInt(req.body.unitPrice, 10) * amount;
+    const sql = "INSERT INTO `00record` (`rId`, `pNo`, `amount`, `rTotal`) VALUES(?,?,?,?)"
+    console.log(rId, pNo, amount, rTotal)
     db.connection.query(sql, [rId, pNo, amount, rTotal],
         (error, data) =>{
             if(error){
@@ -116,7 +116,7 @@ router.post("/inputRecord", async (req, res) =>{
             }
             else{
                 console.log(data);
-                res.send(data);
+                res.send({result: "success", data});
                 //Call API discard item in cart
             }
         }

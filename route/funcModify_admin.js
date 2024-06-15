@@ -76,8 +76,25 @@ router.post("/modifyPwd", (req, res) =>{
     )
 })
 
+router.post("/deleteMember", (req, res) =>{
+    const mId = req.body.mId;
+    const sql = "DELETE FROM `00member` WHERE mId=?"
+    db.connection.query(sql, [mId],
+        (error, data) =>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success", data});
+            }
+        }
+    )
+})
+
 router.get("/viewMerchandise", (req, res) =>{
-    const sql = "SELECT * FROM `00product product JOIN 00record record ON product.rId = record.rId`"
+    const sql = "SELECT * FROM `00product`"
     db.connection.query(sql,
         (error, data) =>{
             if(error){
@@ -96,16 +113,18 @@ router.get("/viewMerchandise", (req, res) =>{
 })
 
 
-router.get("/viewTransaction", (req, res) =>{
-    const sql = "SELECT * FROM `00product`"
+router.post("/viewTrans", (req, res) =>{
+    const sql = "SELECT * FROM `00transaction`"
     db.connection.query(sql,
         (error, data) =>{
             if(error){
                 console.log("error,", error)
             }
             else{
-                if(data.length > 0)
+                if(data.length > 0){
+                    console.log(data);
                     res.send(data);
+                }
                 else{
                     console.log("something wrong");
                     res.status(500).send({result: "error"});
