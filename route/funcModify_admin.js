@@ -31,10 +31,12 @@ router.post("/modifyMember", (req, res) =>{
     const email = req.body.email;
     const gender = req.body.gender;
     const phone = req.body.phone;
-    const address = req.body.address;
+    const birthday = req.body.birthday;
+    const mAccount = req.body.mAccount;
+    const mPwd = req.body.mPwd;
 
-    const sql = "UPDATE `00member` SET `mName`=?,`pId`=?,`email`=?,`gender`=?,`phone`=?,`address`=? WHERE mId=?"
-    db.connection.query(sql, [mName, pId, email, gender, phone, address, mId],
+    const sql = "UPDATE `00member` SET `mAccount`=?,`mPwd`=?,`mName`=?,`pId`=?,`email`=?,`gender`=?, `phone`=?,`birthday`=? WHERE mId=?"
+    db.connection.query(sql, [mAccount, mPwd, mName, pId, email, gender, phone, birthday, mId],
         (error, data) =>{
             if(error){
                 console.log("error,", error)
@@ -43,10 +45,6 @@ router.post("/modifyMember", (req, res) =>{
                 if(data.length > 0){
                     console.log(data);
                     res.send(data);
-                }
-                else{
-                    console.log("something wrong");
-                    res.status(500).send({result: "error"});
                 }
             }
         }
