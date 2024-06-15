@@ -18,6 +18,7 @@ var modifyMemberSide = require("./route/funcModify_member");
 var modifyAdminSide = require("./route/funcModify_admin");
 var productDetail = require("./route/funcProductDetail");
 var cartDetail = require("./route/funcCartDetail");
+var check = require("./route/funcCheck");
 
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
@@ -25,6 +26,7 @@ app.use("/modifyMemberSide", modifyMemberSide);
 app.use("/modifyAdminSide", modifyAdminSide);
 app.use("/pDetail", productDetail);
 app.use("/cart", cartDetail)
+app.use("/check", check);
 
 
 const port = 3001;

@@ -14,7 +14,7 @@ async function getGenerateRId(){
     const id = generateRId();
     console.log("get userId:" + id);
     // Check if the generated ID is unique
-    const query = 'SELECT * FROM 00transaction WHERE mId = ?';
+    const query = 'SELECT * FROM 00transaction WHERE rId = ?';
     try {
         const data = await new Promise((resolve, reject) => {
             db.connection.query(query, [id], (error, results) => {
@@ -32,7 +32,7 @@ async function getGenerateRId(){
             return id;
         } else {
             console.log("failed id:" + id);
-            return getGenerateMId();  // 递归调用以生成新的 id
+            return getGenerateRId(); 
         }
     } catch (error) {
         console.error('Database query failed:', error);
@@ -63,15 +63,16 @@ async function getGenerateRId(){
     
 }
 
-router.post("/inputTrans", (req, res) =>{
-    const rId = getGenerateRId();
-    const tMethod = "cart";
+router.post("/inputTrans", async (req, res) =>{
+    const rId = await getGenerateRId();
+    const tMethod = req.body.tMethod;
     const tTime = req.body.tTime;
     const mId = req.body.mId;
     const tPay = req.body.tPay;
     const bankId = req.body.bankId;
     const bankName = req.body.bankName;
     const cardId = req.body.cardId;
+    const security = req.body.security;
     const dueDate = req.body.dueDate;
     const tDelivery = req.body.tDelivery;
     const tAddress = req.body.tAddress;
@@ -85,15 +86,15 @@ router.post("/inputTrans", (req, res) =>{
        3.刪除 00cartdetail裡已結帳的商品
     */
 
-    const sql = "INSERT INTO `00transaction`(`tId`, `tMethod`, `tTime`, `mId`, `tPay`, `bankId`, `bankName`, `cardId`, `dueDate`, `tDelivery`, `tAddress`, `recipient`, `reciPhone`, `tState`, `payState`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-    db.connection.query(sql, [rId, tMethod, tTime, mId, tPay, bankId, bankName, cardId, dueDate, tDelivery, tAddress, recipient, reciPhone, tState, payState],
+    const sql = "INSERT INTO `00transaction`(`rId`, `tMethod`, `tTime`, `mId`, `tPay`, `bankId`, `bankName`, `cardId`, `security`, `dueDate`, `tDelivery`, `tAddress`, `recipient`, `reciPhone`, `tState`, `payState`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    db.connection.query(sql, [rId, tMethod, tTime, mId, tPay, bankId, bankName, cardId, security, dueDate, tDelivery, tAddress, recipient, reciPhone, tState, payState],
         (error, data) =>{
             if(error){
                 console.log("error:", error);
             }
             else{
                 console.log({data: data})
-                res.send(data);
+                res.send({data, rId: rId});
             }
         }
     )
@@ -122,20 +123,6 @@ router.post("/inputRecord", async (req, res) =>{
     )
 })
 
-router.post("/cartDiscard", (req, res) =>{
-    const tId = req.body.tId;
-    const pNo = req.body.pNo;
-    const sql = "DELETE FROM `00cartdetail` WHERE tId=? AND pNo=?"
 
-    db.connection.query(sql, [tId, pNo],
-        (error, data) =>{
-            if(error){
-                console.log(error);
-                res.status(500).send(error);
-            }
-            else{
-                console.log(data);
-            }
-        }
-    )
-})
+
+module.exports = router

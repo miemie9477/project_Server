@@ -25,36 +25,39 @@ router.get("/getItem/:userAccount", (req, res) =>{
     )
 })
 
-router.post("/modifyAmount", (req, res) =>{
+router.post("/modifyAmount", async (req, res) =>{
     const tId = req.body.tId;
-    const pName = req.body.pName;
+    const pNo = req.body.pNo;
     const amount = req.body.amount;
     var salePrice;
-    var sql = "SELECT unitPrice FROM 00product WHERE pName=?"
-    db.connection.query(sql, [pName],
+    var sql = "SELECT unitPrice FROM 00product WHERE pNo=?"
+    await db.connection.query(sql, [pNo],
         (error, data) =>{
             if(error){
                 console.log(error);
                 res.status(500).send(error);
             }
             else{
-                salePrice = parseInt(data.unitPrice, 10) * amount;
+                console.log("unitPrice", data[0].unitPrice)
+                salePrice = parseInt(data[0].unitPrice, 10) * amount;
+                console.log("salePrice:", salePrice);
+                
+                sql = "UPDATE `00cartdetail` SET `amount`='?',`salePrice`='?' WHERE tId=? AND pNo=?"
+                db.connection.query(sql, [amount, salePrice, tId, pNo],
+                    (error, data) =>{
+                        if(error){
+                            console.log(error);
+                            res.status(500).send(error);
+                        }
+                        else{
+                            res.send({result: "success", data});
+                        }
+                    }
+                )
             }
         }
     )
-
-    sql = "UPDATE `00cartdetail` SET `amount`='?',`salePrice`='?' WHERE tId=? AND pNo=?"
-    db.connection.query(sql, [amount, salePrice, tId, pNo],
-        (error, data) =>{
-            if(error){
-                console.log(error);
-                res.status(500).send(error);
-            }
-            else{
-                res.send(data);
-            }
-        }
-    )
+    
 })
 
 function generateTId() {
@@ -172,7 +175,24 @@ router.post("/add", (req, res) =>{
     )
 })
 
+router.post("/cartDiscard", (req, res) =>{
+    const tId = req.body.tId;
+    const pNo = req.body.pNo;
+    const sql = "DELETE FROM `00cartdetail` WHERE tId=? AND pNo=?"
+
+    db.connection.query(sql, [tId, pNo],
+        (error, data) =>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success"});
+            }
+        }
+    )
+})
 
 
-router.post("")
 module.exports = router;
