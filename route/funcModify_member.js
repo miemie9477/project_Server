@@ -86,7 +86,7 @@ router.post("/modifyPwd", (req, res) =>{
 
 router.post("/viewTrans", (req, res) =>{
     const mId = req.body.userAccount;
-    var sql = "SELECT rId, tState, recipient, reciPhone, tDelivery, tAddress, payState FROM `00transaction` WHERE mId=?"
+    var sql = "SELECT rId, total, tState, recipient, reciPhone, tDelivery, tAddress, payState FROM `00transaction` WHERE mId=?"
     var transInfo;
     db.connection.query(sql, [mId],
         (error, data) =>{
@@ -105,7 +105,7 @@ router.post("/viewTrans", (req, res) =>{
 
 router.post("/viewRecord", (req, res) =>{
     const rId = req.body.rId
-    sql = "SELECT * FROM `00record` WHERE rId=?"
+    sql = "SELECT r.*, p.pName FROM 00record r JOIN 00product p ON r.pNo = p.pNo WHERE r.rId =?;"
     db.connection.query(sql, [rId],
         (error, data) =>{
             if(error){
@@ -127,6 +127,24 @@ router.post("/rating", (req, res) =>{
     const info = req.body.info;
     const sql = "INSERT INTO `00board`(`UUID`, `mId`, `pNo`, `date`, `content`) VALUES ('',?,?,?,?)"
     db.connection.query(sql, [mId, pNo, date, info],
+        (error, data) =>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success", data});
+            }
+        }
+    )
+})
+
+router.post("/return", (req, res) =>{
+    const rId = req.body.rId;
+    const tState = "申請退貨中"
+    const sql = "UPDATE 00transation SET tState=? WHERE rId=?"
+    db.connection.query(sql, [tState, rId],
         (error, data) =>{
             if(error){
                 console.log(error);

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var db = require('../model/localhost_connection');
 
+
+
 function generateRId() {
     const letters = 'abcdefghijklmnopqrstuvwxyz';
     const letter = letters[Math.floor(Math.random() * letters.length)];
@@ -63,8 +65,40 @@ async function getGenerateRId(){
     
 }
 
+router.post("/checkPAmount", (req, res) =>{
+    const pNo = req.body.pNo;
+    const amount = req.body.amount;
+    console.log(pNo, amount);
+    var sql = "SELECT pAmount FROM 00product WHERE pNo=?"
+    db.connection.query(sql, [pNo],
+        (error, data) =>{
+            
+            if(error){
+                console.log("error:", error);
+            }
+            else{
+                if(parseInt(data[0].pAmount, 10) < parseInt(amount, 10)){
+                    console.log("pAmount:", data[0].pAmount);
+                    res.send({result:"fail"});
+                }
+                else{
+                    const pAmount = parseInt(data[0].pAmount, 10)-parseInt(amount, 10);
+                    sql = "UPDATE 00product SET pAmount=? WHERE pNo=?"
+                    db.connection.query(sql, [pAmount, pNo],
+                        (error, data) =>{
+                            console.log({data: data})
+                            res.send({result: "success", data});
+                        }
+                    )
+                }
+            }
+        }
+    )
+})
+
 router.post("/inputTrans", async (req, res) =>{
     const rId = await getGenerateRId();
+    const total = req.body.total;
     const tMethod = req.body.tMethod;
     const tTime = req.body.tTime;
     const mId = req.body.mId;
@@ -86,8 +120,8 @@ router.post("/inputTrans", async (req, res) =>{
        3.刪除 00cartdetail裡已結帳的商品
     */
 
-    const sql = "INSERT INTO `00transaction`(`rId`, `tMethod`, `tTime`, `mId`, `tPay`, `bankId`, `bankName`, `cardId`, `security`, `dueDate`, `tDelivery`, `tAddress`, `recipient`, `reciPhone`, `tState`, `payState`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-    db.connection.query(sql, [rId, tMethod, tTime, mId, tPay, bankId, bankName, cardId, security, dueDate, tDelivery, tAddress, recipient, reciPhone, tState, payState],
+    const sql = "INSERT INTO `00transaction`(`rId`, `total`,`tMethod`, `tTime`, `mId`, `tPay`, `bankId`, `bankName`, `cardId`, `security`, `dueDate`, `tDelivery`, `tAddress`, `recipient`, `reciPhone`, `tState`, `payState`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+    db.connection.query(sql, [rId, total, tMethod, tTime, mId, tPay, bankId, bankName, cardId, security, dueDate, tDelivery, tAddress, recipient, reciPhone, tState, payState],
         (error, data) =>{
             if(error){
                 console.log("error:", error);
