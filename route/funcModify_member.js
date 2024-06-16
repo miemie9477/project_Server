@@ -124,9 +124,9 @@ router.post("/rating", (req, res) =>{
     const mId = req.body.userAccount;
     const pNo = req.body.pNo;
     const date = req.body.date;
-    const info = req.body.info;
+    const message = req.body.message;
     const sql = "INSERT INTO `00board`(`UUID`, `mId`, `pNo`, `date`, `content`) VALUES ('',?,?,?,?)"
-    db.connection.query(sql, [mId, pNo, date, info],
+    db.connection.query(sql, [mId, pNo, date, message],
         (error, data) =>{
             if(error){
                 console.log(error);
@@ -143,7 +143,7 @@ router.post("/rating", (req, res) =>{
 router.post("/return", (req, res) =>{
     const rId = req.body.rId;
     const tState = "申請退貨中"
-    const sql = "UPDATE 00transation SET tState=? WHERE rId=?"
+    const sql = "UPDATE 00transaction SET tState=? WHERE rId=?"
     db.connection.query(sql, [tState, rId],
         (error, data) =>{
             if(error){
