@@ -186,4 +186,71 @@ router.post("/deleteTrans", (req, res) =>{
         }
     )
 })
+
+
+router.post("/saleAmountChart", (req, res) =>{
+    const sql = "SELECT P.pName, SUM(R.amount) AS total_sold FROM 00product AS P JOIN 00record AS R ON P.pNo = R.pNo GROUP BY P.pName ORDER BY total_sold DESC";
+    db.connection.query(sql,
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success", data});
+            }
+        }
+    )
+})
+
+
+router.post("/femaleChart", (req, res)=>{
+    const sql = "SELECT M.gender, R.pNo, COUNT(R.rId) AS count FROM 00member AS M JOIN (00transaction AS T NATURAL JOIN 00record AS R) ON M.mId = T.mId WHERE M.gender = 'F' GROUP BY M.gender, R.pNo ORDER BY count DESC;";
+    db.connection.query(sql,
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success", data});
+            }
+        }
+    )
+})
+
+router.post("/maleChart", (req, res)=>{
+    const sql = "SELECT M.gender, R.pNo, COUNT(R.rId) AS count FROM 00member AS M JOIN (00transaction AS T NATURAL JOIN 00record AS R) ON M.mId = T.mId WHERE M.gender = 'M' GROUP BY M.gender, R.pNo ORDER BY count DESC;";
+    db.connection.query(sql,
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success", data});
+            }
+        }
+    )
+})
+
+router.post("/saleTotalChart", (req, res) =>{
+    const sql = "SELECT P.pName, SUM(R.rTotal) AS total_sales_amount FROM 00product AS P JOIN 00record AS R ON P.pNo = R.pNo GROUP BY P.pName ORDER BY total_sales_amount DESC";
+    db.connection.query(sql,
+        (error, data)=>{
+            if(error){
+                console.log(error);
+                res.status(500).send(error);
+            }
+            else{
+                console.log(data);
+                res.send({result:"success", data});
+            }
+        }
+    )
+})
+
 module.exports = router;
