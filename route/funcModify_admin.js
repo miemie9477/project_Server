@@ -206,7 +206,7 @@ router.post("/saleAmountChart", (req, res) =>{
 
 
 router.post("/femaleChart", (req, res)=>{
-    const sql = "SELECT M.gender, R.pNo, COUNT(R.rId) AS count FROM 00member AS M JOIN (00transaction AS T NATURAL JOIN 00record AS R) ON M.mId = T.mId WHERE M.gender = 'F' GROUP BY M.gender, R.pNo ORDER BY count DESC;";
+    const sql = "SELECT M.gender, P.pName, COUNT(R.rId) AS count FROM 00member AS M JOIN (00transaction AS T NATURAL JOIN 00record AS R) ON M.mId = T.mId JOIN 00product AS P ON R.pNo = P.pNo WHERE M.gender = 'F' GROUP BY M.gender, P.pName ORDER BY count DESC;";
     db.connection.query(sql,
         (error, data)=>{
             if(error){
@@ -222,7 +222,7 @@ router.post("/femaleChart", (req, res)=>{
 })
 
 router.post("/maleChart", (req, res)=>{
-    const sql = "SELECT M.gender, R.pNo, COUNT(R.rId) AS count FROM 00member AS M JOIN (00transaction AS T NATURAL JOIN 00record AS R) ON M.mId = T.mId WHERE M.gender = 'M' GROUP BY M.gender, R.pNo ORDER BY count DESC;";
+    const sql = "SELECT M.gender, P.pName, COUNT(R.rId) AS count FROM 00member AS M JOIN (00transaction AS T NATURAL JOIN 00record AS R) ON M.mId = T.mId JOIN 00product AS P ON R.pNo = P.pNo WHERE M.gender = 'M' GROUP BY M.gender, P.pName ORDER BY count DESC;";
     db.connection.query(sql,
         (error, data)=>{
             if(error){
