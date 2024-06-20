@@ -2,11 +2,11 @@
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
-    host:"120.107.152.110",
+    host:"eu-cluster-west-01.k8s.cleardb.net",
     // path :"/phpmyadmin",
-    user: "a0207",
-    password: "pwd0207",
-    database: "a0207"},
+    user: "bad8eb8b61aee3",
+    password: "10ea15d7",
+    database: "heroku_3387a94419c088b"},
 )
 
 connection.connect((error) => {

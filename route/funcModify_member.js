@@ -15,7 +15,7 @@ router.get("/getData/:userAccount", (req, res) =>{
             (error, data) => {
                 if(error){
                     console.log(error);
-                    res.send(error);
+                    res.status(500).send({result: "Error", data, error});
                 }
                 else{
                     if(data.length > 0){
@@ -56,7 +56,7 @@ router.post("/modifyData", (req, res)=>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send("error");
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -74,7 +74,7 @@ router.post("/modifyPwd", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send("error");
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -92,7 +92,7 @@ router.post("/viewTrans", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send("error");
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log("transaction:", data);
@@ -110,7 +110,7 @@ router.post("/viewRecord", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send("error");
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -130,7 +130,7 @@ router.post("/rating", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -148,7 +148,7 @@ router.post("/return", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);

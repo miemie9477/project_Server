@@ -10,7 +10,8 @@ router.get("/getItem/:userAccount", (req, res) =>{
     db.connection.query(sql, [mId],
         (error, data) =>{
             if(error){
-                console.log("wrong:", error)
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(data.length < 0){
@@ -35,7 +36,7 @@ router.post("/modifyAmount", async (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log("unitPrice", data[0].unitPrice)
@@ -125,10 +126,10 @@ router.post("/checkExist", async (req, res) => {
     console.log(mId);
     const sql = "SELECT tId FROM 00cart WHERE mId=?";
     db.connection.query(sql, [mId], async (error, data) => {
-        if (error) {
+        if(error){
             console.log(error);
-            res.status(500).send("Server error");
-        } else {
+            res.status(500).send({result: "Error", data, error});
+        }else {
             console.log("result", data);
             if (data.length === 0) {
                 try {
@@ -165,11 +166,11 @@ router.post("/add", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send({result: "Error"});
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log("success:", data);
-                res.send({result: "Add"});
+                res.send({result: "Add", data});
             }
         }
     )
@@ -184,7 +185,7 @@ router.post("/cartDiscard", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);

@@ -8,8 +8,8 @@ router.get("/viewMember", (req, res) =>{
     db.connection.query(sql, 
         (error, data) =>{
             if(error){
-                console.log("wrong with viewing member data")
                 console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(data.length > 0){
@@ -39,7 +39,8 @@ router.post("/modifyMember", (req, res) =>{
     db.connection.query(sql, [mAccount, mPwd, mName, pId, email, gender, phone, birthday, mId],
         (error, data) =>{
             if(error){
-                console.log("error,", error)
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 
@@ -60,7 +61,7 @@ router.post("/deleteMember", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -75,7 +76,8 @@ router.get("/viewMerchandise", (req, res) =>{
     db.connection.query(sql,
         (error, data) =>{
             if(error){
-                console.log("error,", error)
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(data.length > 0)
@@ -103,7 +105,8 @@ router.post("/modifyMerchandise", (req, res)=>{
     db.connection.query(sql, [pNo, pName, specification, brand, category, unitPrice, pIntroduction, pAmount, pNo],
         (error, data) =>{
             if(error){
-                console.log("error,", error)
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 
@@ -120,7 +123,8 @@ router.post("/viewTrans", (req, res) =>{
     db.connection.query(sql,
         (error, data) =>{
             if(error){
-                console.log("error,", error)
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(data.length > 0){
@@ -129,7 +133,7 @@ router.post("/viewTrans", (req, res) =>{
                 }
                 else{
                     console.log("something wrong");
-                    res.status(500).send({result: "error"});
+                    res.status(500).send({result: "error", data, error});
                 }
             }
         }
@@ -148,7 +152,8 @@ router.post("/modifyTrans", (req, res) =>{
     db.connection.query(sql, [total, mId, tDelivery, tAddress, recipient, tState, payState, rId],
         (error, data) =>{
             if(error){
-                console.log("error,", error)
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -164,7 +169,7 @@ router.post("/deleteTrans", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -194,7 +199,7 @@ router.post("/saleAmountChart", (req, res) =>{
         (error, data)=>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -211,7 +216,7 @@ router.post("/femaleChart", (req, res)=>{
         (error, data)=>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -227,7 +232,7 @@ router.post("/maleChart", (req, res)=>{
         (error, data)=>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
@@ -243,7 +248,7 @@ router.post("/saleTotalChart", (req, res) =>{
         (error, data)=>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);

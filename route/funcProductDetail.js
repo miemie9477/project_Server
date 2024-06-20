@@ -9,7 +9,10 @@ router.get("/getDetail/:pNo", (req, res) =>{
     
     db.connection.query(sql, [pNo],
         (error, data) =>{
-            if(error) console.log(error);
+            if(error){
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
+            }
             else{
                 if(data.length > 0){
                     console.log(data);
@@ -34,6 +37,7 @@ router.get("/search/:keyword", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(data.length > 0){
@@ -57,9 +61,9 @@ router.post("/getBoard", (req, res) =>{
     const sql = "SELECT * FROM 00board WHERE pNo=?"
     db.connection.query(sql, [pNo],
         (error, data) =>{
-            if(error) {
+            if(error){
                 console.log(error);
-                res.status(500).send({result: "Error"});
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(data.length > 0){
