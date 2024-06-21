@@ -39,28 +39,6 @@ async function getGenerateMId(){
         console.error('Database query failed:', error);
         throw error;
     }
-    // try{
-    //     db.connection.query(query, [id],
-    //         (error, id, data) =>{
-    //             if(error){
-    //                 console.log("wrong:", error);
-    //                 throw error;
-    //             }
-    //             else if(data.length === 0){
-    //                 console.log("confirm id:"+ id);
-    //                 return id;
-    //             }
-    //             else{
-    //                 console.log("failed id:"+ id)
-    //                 generateMId();
-    //             }
-    //         }
-    //     )
-    // }
-    // catch(error){
-    //     console.error('Database query failed:', error);
-    //     throw error;
-    // }
     
 }
 
@@ -72,7 +50,7 @@ router.post("/account" , (req, res)=>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                return res.status().send(500, "something wrong");
+                res.status(500).send({result: "Error", data, error});
             }
             else if(data.length > 0){
                 return res.json({result: "mAccount exist"});
@@ -92,7 +70,7 @@ router.post("/pId",  (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                return res.status().send(500, "something wrong");
+                res.status(500).send({result: "Error", data, error});
             }
             else if(data.length > 0){
                 return res.json({result: "pId exist"});
@@ -112,7 +90,7 @@ router.post("/email",  (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                return res.status().send(500, "something wrong");
+                res.status(500).send({result: "Error", data, error});
             }
             else if(data.length > 0){
                 return res.json({result:"email exist"});
@@ -133,7 +111,7 @@ router.post("/phone",  (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                return res.status().send(500, "something wrong");
+                res.status(500).send({result: "Error", data, error});
             }
             else if(data.length > 0){
                 return res.json({result: "phone exist"});
@@ -172,7 +150,7 @@ router.post("/check", async (req, res)=>{
             console.log(data);
             if(error){
                 console.log(error);
-                res.status(500).json({ error: "伺服器錯誤" });
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);

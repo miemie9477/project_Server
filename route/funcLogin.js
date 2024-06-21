@@ -11,12 +11,12 @@ router.post("/verify", (req, res) =>{
 
     try{
         db.connection.query(
-            "SELECT * FROM `00member` WHERE `mAccount`=? AND `mPwd`=?;",
+            "SELECT * FROM `00member` WHERE BINARY `mAccount`=? AND BINARY `mPwd`=?;",
             [mAccount, mPwd],
             (error, data) => {
                 if(error){
                     console.log(error);
-                    res.send(error);
+                    res.status(500).send({result: "Error", data, error});
                 }
                 else{
                     if(data.length > 0){

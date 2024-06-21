@@ -40,28 +40,6 @@ async function getGenerateRId(){
         console.error('Database query failed:', error);
         throw error;
     }
-    // try{
-    //     db.connection.query(query, [id],
-    //         (error, id, data) =>{
-    //             if(error){
-    //                 console.log("wrong:", error);
-    //                 throw error;
-    //             }
-    //             else if(data.length === 0){
-    //                 console.log("confirm id:"+ id);
-    //                 return id;
-    //             }
-    //             else{
-    //                 console.log("failed id:"+ id)
-    //                 generateMId();
-    //             }
-    //         }
-    //     )
-    // }
-    // catch(error){
-    //     console.error('Database query failed:', error);
-    //     throw error;
-    // }
     
 }
 
@@ -74,20 +52,27 @@ router.post("/checkPAmount", (req, res) =>{
         (error, data) =>{
             
             if(error){
-                console.log("error:", error);
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(parseInt(data[0].pAmount, 10) < parseInt(amount, 10)){
                     console.log("pAmount:", data[0].pAmount);
-                    res.send({result:"fail"});
+                    res.status(500).send({result: "Error", data, error});
                 }
                 else{
                     const pAmount = parseInt(data[0].pAmount, 10)-parseInt(amount, 10);
                     sql = "UPDATE 00product SET pAmount=? WHERE pNo=?"
                     db.connection.query(sql, [pAmount, pNo],
                         (error, data) =>{
-                            console.log({data: data})
-                            res.send({result: "success", data});
+                            if(error){
+                                console.log(error);
+                                res.status(500).send({result: "Error", data, error});
+                            }
+                            else{
+                                console.log({data: data})
+                                res.send({result: "success", data});
+                            }
                         }
                     )
                 }
@@ -124,7 +109,8 @@ router.post("/inputTrans", async (req, res) =>{
     db.connection.query(sql, [rId, total, tMethod, tTime, mId, tPay, bankId, bankName, cardId, security, dueDate, tDelivery, tAddress, recipient, reciPhone, tState, payState],
         (error, data) =>{
             if(error){
-                console.log("error:", error);
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log({data: data})
@@ -146,7 +132,7 @@ router.post("/inputRecord", async (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);

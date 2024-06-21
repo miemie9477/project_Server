@@ -10,7 +10,8 @@ router.get("/getItem/:userAccount", (req, res) =>{
     db.connection.query(sql, [mId],
         (error, data) =>{
             if(error){
-                console.log("wrong:", error)
+                console.log(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 if(data.length < 0){
@@ -35,7 +36,7 @@ router.post("/modifyAmount", async (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log("unitPrice", data[0].unitPrice)
@@ -125,10 +126,10 @@ router.post("/checkExist", async (req, res) => {
     console.log(mId);
     const sql = "SELECT tId FROM 00cart WHERE mId=?";
     db.connection.query(sql, [mId], async (error, data) => {
-        if (error) {
+        if(error){
             console.log(error);
-            res.status(500).send("Server error");
-        } else {
+            res.status(500).send({result: "Error", data, error});
+        }else {
             console.log("result", data);
             if (data.length === 0) {
                 try {
@@ -139,7 +140,7 @@ router.post("/checkExist", async (req, res) => {
                     });
                 } catch (createError) {
                     console.log(createError);
-                    res.status(500).send("Error creating cart");
+                    res.status(500).send({result:"Error creating cart", createError});
                 }
             } else if (data.length === 1) {
                 console.log(data[0].tId);
@@ -160,16 +161,16 @@ router.post("/add", (req, res) =>{
     const amount = req.body.amount;
     const salePrice = req.body.salePrice;
     console.log("Adding.")
-    var sql = "INSERT INTO `00cartdetail`(`UUID`, `tId`, `pNo`, `amount`, `salePrice`) VALUES ('',?,?,?,? );"
+    var sql = "INSERT INTO `00cartdetail`(`tId`, `pNo`, `amount`, `salePrice`) VALUES (?,?,?,? );"
     db.connection.query(sql, [tId, pNo, amount, salePrice],
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send({result: "Error"});
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log("success:", data);
-                res.send({result: "Add"});
+                res.send({result: "Add", data});
             }
         }
     )
@@ -184,7 +185,7 @@ router.post("/cartDiscard", (req, res) =>{
         (error, data) =>{
             if(error){
                 console.log(error);
-                res.status(500).send(error);
+                res.status(500).send({result: "Error", data, error});
             }
             else{
                 console.log(data);
